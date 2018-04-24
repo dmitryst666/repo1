@@ -2,6 +2,7 @@ package localhost.shadow.sql_tst02;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -14,10 +15,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class AddClients extends Activity{
 
     TextView test1;
     CheckBox chb;
+    ConnectionClass connectionClass;
 
 
     @Override
@@ -29,13 +37,14 @@ public class AddClients extends Activity{
         test1.setText("ტექსტის თვისებების შეცვლა");
         registerForContextMenu(test1);
         chb = (CheckBox)findViewById(R.id.chbExtMenu);
+        connectionClass = new ConnectionClass();
 
 
         // получаем экземпляр элемента ListView
         ListView listView = (ListView)findViewById(R.id.listView);
 
         // определяем массив типа String
-        final String[] catNames = new String[] {
+      /*  final String[] catNames = new String[] {
                 "Рыжик", "Барсик", "Мурзик", "Мурка", "Васька",
                 "Томасина", "Кристина", "Пушок", "Дымка", "Кузя",
                 "Китти", "Масяня", "Симба"
@@ -44,9 +53,10 @@ public class AddClients extends Activity{
         // используем адаптер данных
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_item, catNames);
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);  */
 
-
+        fillAll fill = new fillAll();
+        fill.execute("");
     }
 
     // создание меню
@@ -77,7 +87,7 @@ public class AddClients extends Activity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
-        StringBuilder sb = new StringBuilder();
+     /*   StringBuilder sb = new StringBuilder();
 
         // Выведем в TextView информацию о нажатом пункте меню
         sb.append("Item Menu");
@@ -86,10 +96,65 @@ public class AddClients extends Activity{
         sb.append("\r\n order: " + String.valueOf(item.getOrder()));
         sb.append("\r\n title: " + item.getTitle());
         test1.setText(sb.toString());
-
+    */
         return super.onOptionsItemSelected(item);
     }
 
+    public class fillAll extends AsyncTask<String,String,String>{
 
+        ProgressBar pbbar = (ProgressBar)findViewById(R.id.pbbar);
+
+   /*     @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
+            Toast.makeText(AddClients.this,r,Toast.LENGTH_SHORT).show();
+        }  */
+
+
+        @Override
+        protected String doInBackground(String... params){
+            try{
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    String z = "Error in connection with SQL server";
+                }  else {
+                    ArrayList<HashMap<String, String>> client = new ArrayList<HashMap<String, String>>();
+
+                    String query = " SELECT TOP 10 Acc AS account, Acc_nu AS name FROM Accounts";
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+
+
+                    if(rs.next())
+                    {
+                        HashMap<String,String> mapp = new HashMap<>();
+                        mapp.put("account", rs.getString("account"));
+                      //  mapp.put("name", rs.getNString("name"));
+                     //   client.add(mapp);
+                    }
+                   // ListView listView = (ListView)findViewById(R.id.listView);
+                  //  ArrayAdapter<HashMap<String, String>> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.list_item, client);
+
+                  //  listView.setAdapter(adapter);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Toast.makeText(AddClients.this,"Exceptions",Toast.LENGTH_SHORT).show();
+            }
+
+
+        return "";
+        } /// end of doInBackground
+
+
+    }// end of  class fillAll
 
 }
