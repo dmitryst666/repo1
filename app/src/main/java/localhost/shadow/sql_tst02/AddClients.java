@@ -103,8 +103,9 @@ public class AddClients extends Activity{
     public class fillAll extends AsyncTask<String,String,String>{
 
         ProgressBar pbbar = (ProgressBar)findViewById(R.id.pbbar);
+        ListView listView = (ListView)findViewById(R.id.listView);
 
-   /*     @Override
+  /*      @Override
         protected void onPreExecute() {
             pbbar.setVisibility(View.VISIBLE);
         }
@@ -112,18 +113,19 @@ public class AddClients extends Activity{
         @Override
         protected void onPostExecute(String r) {
             pbbar.setVisibility(View.GONE);
-            Toast.makeText(AddClients.this,r,Toast.LENGTH_SHORT).show();
+           /// Toast.makeText(AddClients.this,r,Toast.LENGTH_SHORT).show();
         }  */
 
 
         @Override
         protected String doInBackground(String... params){
+            ArrayList<HashMap<String, String>> client = new ArrayList<HashMap<String, String>>();
             try{
                 Connection con = connectionClass.CONN();
                 if (con == null) {
                     String z = "Error in connection with SQL server";
                 }  else {
-                    ArrayList<HashMap<String, String>> client = new ArrayList<HashMap<String, String>>();
+
 
                     String query = " SELECT TOP 10 Acc AS account, Acc_nu AS name FROM Accounts";
                     Statement stmt = con.createStatement();
@@ -134,13 +136,13 @@ public class AddClients extends Activity{
                     {
                         HashMap<String,String> mapp = new HashMap<>();
                         mapp.put("account", rs.getString("account"));
-                      //  mapp.put("name", rs.getNString("name"));
-                     //   client.add(mapp);
+                        mapp.put("name", rs.getString("name"));
+                        client.add(mapp);
                     }
-                   // ListView listView = (ListView)findViewById(R.id.listView);
-                  //  ArrayAdapter<HashMap<String, String>> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.list_item, client);
 
-                  //  listView.setAdapter(adapter);
+                    /// тут был адаптер )))))
+
+                   /// listView.setAdapter(adapter);
 
                 }
 
@@ -149,7 +151,8 @@ public class AddClients extends Activity{
             {
                 Toast.makeText(AddClients.this,"Exceptions",Toast.LENGTH_SHORT).show();
             }
-
+            ArrayAdapter<HashMap<String, String>> adapter = new ArrayAdapter<>(AddClients.this, R.layout.list_item, client);
+listView.setAdapter(adapter);
 
         return "";
         } /// end of doInBackground
