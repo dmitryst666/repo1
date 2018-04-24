@@ -36,6 +36,10 @@ public class MainActivity extends Activity {
         pbbar = (ProgressBar) findViewById(R.id.pbbar);
         pbbar.setVisibility(View.GONE);
 
+        ///debug
+        edtuserid.setText("rpl");
+        edtpass.setText("9");
+
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
