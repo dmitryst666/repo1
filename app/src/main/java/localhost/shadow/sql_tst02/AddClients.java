@@ -132,14 +132,14 @@ public class AddClients extends Activity{
                     ResultSet rs = stmt.executeQuery(query);
 
 
-                    if(rs.next())
+                    while(rs.next())
                     {
                         HashMap<String,String> mapp = new HashMap<>();
                         mapp.put("account", rs.getString("account"));
                         mapp.put("name", rs.getString("name"));
                         client.add(mapp);
                     }
-
+                    con.close();
                     /// тут был адаптер )))))
 ////////////////////////
                    /// listView.setAdapter(adapter);
@@ -153,6 +153,8 @@ public class AddClients extends Activity{
             }
             ArrayAdapter<HashMap<String, String>> adapter = new ArrayAdapter<>(AddClients.this, R.layout.list_item, client);
 listView.setAdapter(adapter);
+TextView tv = (TextView)findViewById(R.id.textView);
+tv.setText( Integer.toString(client.size()));
 
         return "";
         } /// end of doInBackground
