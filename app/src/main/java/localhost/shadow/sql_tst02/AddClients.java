@@ -141,7 +141,7 @@ public class AddClients extends Activity{
                     }
 
                     /// тут был адаптер )))))
-
+////////////////////////
                    /// listView.setAdapter(adapter);
 
                 }
